@@ -15,7 +15,7 @@ Based on TP15263 Section 3 and Transport Canada standards.
 
 ## View Live
 
-[View Presentation](https://username.github.io/humanfactors/)
+**[View Presentation](https://vincentjgeisler.github.io/humanfactors/)**
 
 ## Navigation
 
