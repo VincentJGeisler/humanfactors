@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Factors for RPAS - CASARA Training</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a4d8f;
+            --secondary: #1e88e5;
+            --accent: #00e5ff;
+            --warning: #ff9100;
+            --danger: #d32f2f;
+            --dark: #0d1b2a;
+            --light: #e0f2fe;
+            --gray: #415a77;
+            --nav-reserved-height: 15vh;
+            --content-height: 85vh;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            overflow: hidden;
+        }
+
+        .slide-content {
+            width: 100%;
+            padding: 2vh 5vw;
+            transform-origin: top left;
+            box-sizing: border-box;
+        }
+
+        .slide-content > * {
+            transform-origin: top left;
+        }
+
+        .slide-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+            z-index: 10;
+        }
+
+
+        .slide::after {
+            content: '';
+            position: fixed;
+            bottom: calc(var(--nav-reserved-height) / 2);
+            right: 5vw;
+            transform: translateY(50%);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: clamp(1vh, 1.5vmin, 1.5vh);
+            color: var(--gray);
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .slide:nth-child(1)::after { content: '01/25'; }
+        .slide:nth-child(2)::after { content: '02/25'; }
+        .slide:nth-child(3)::after { content: '03/25'; }
+        .slide:nth-child(4)::after { content: '04/25'; }
+        .slide:nth-child(5)::after { content: '05/25'; }
+        .slide:nth-child(6)::after { content: '06/25'; }
+        .slide:nth-child(7)::after { content: '07/25'; }
+        .slide:nth-child(8)::after { content: '08/25'; }
+        .slide:nth-child(9)::after { content: '09/25'; }
+        .slide:nth-child(10)::after { content: '10/25'; }
+        .slide:nth-child(11)::after { content: '11/25'; }
+        .slide:nth-child(12)::after { content: '12/25'; }
+        .slide:nth-child(13)::after { content: '13/25'; }
+        .slide:nth-child(14)::after { content: '14/25'; }
+        .slide:nth-child(15)::after { content: '15/25'; }
+        .slide:nth-child(16)::after { content: '16/25'; }
+        .slide:nth-child(17)::after { content: '17/25'; }
+        .slide:nth-child(18)::after { content: '18/25'; }
+        .slide:nth-child(19)::after { content: '19/25'; }
+        .slide:nth-child(20)::after { content: '20/25'; }
+        .slide:nth-child(21)::after { content: '21/25'; }
+        .slide:nth-child(22)::after { content: '22/25'; }
+        .slide:nth-child(23)::after { content: '23/25'; }
+        .slide:nth-child(24)::after { content: '24/25'; }
+        .slide:nth-child(25)::after { content: '25/25'; }
+
+        h1 {
+            font-size: clamp(3vh, 6vmin, 6vh);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5vh;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: clamp(2.5vh, 5vmin, 5vh);
+            font-weight: 600;
+            margin-bottom: 2vh;
+            color: var(--accent);
+            border-left: 6px solid var(--accent);
+            padding-left: 1.5vw;
+        }
+
+        h3 {
+            font-size: clamp(2vh, 3vmin, 3vh);
+            font-weight: 500;
+            margin-bottom: 1.2vh;
+            color: var(--light);
+        }
+
+        p, li {
+            font-size: clamp(1.2vh, 2vmin, 2vh);
+            line-height: 1.4;
+            margin-bottom: 0.8vh;
+            color: #e0f2fe;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 3vw;
+            margin-bottom: 0.8vh;
+        }
+
+        ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: clamp(1.5vh, 2.5vmin, 2.5vh);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        ul li.clickable::before {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        ul li.clickable .li-content {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s, max-height 0.3s;
+        }
+
+        ul li.revealed .li-content {
+            opacity: 1;
+            max-height: 1000px;
+            animation: hudReveal 1s ease-out;
+        }
+
+        ul li {
+            cursor: pointer;
+        }
+
+        @keyframes hudReveal {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+                filter: blur(4px);
+            }
+            30% {
+                opacity: 0.3;
+                filter: blur(2px);
+            }
+            60% {
+                opacity: 0.7;
+                filter: blur(1px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+                filter: blur(0);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1.8vh, 3vmin, 3vh);
+            color: var(--light);
+            margin-bottom: 2vh;
+            font-weight: 300;
+        }
+
+        .meta {
+            font-size: clamp(1vh, 1.8vmin, 1.8vh);
+            color: var(--gray);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .title-slide .slide-content {
+            align-items: flex-start;
+        }
+
+        .hud-box {
+            border: 2px solid var(--accent);
+            padding: 1.5vh 2vw;
+            margin: 1.5vh 0;
+            background: rgba(0, 229, 255, 0.05);
+            position: relative;
+        }
+
+        .hud-box::before,
+        .hud-box::after {
+            content: '';
+            position: absolute;
+            width: 1.5vmin;
+            height: 1.5vmin;
+            border: 2px solid var(--accent);
+        }
+
+        .hud-box::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .hud-box::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .warning-text {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .danger-text {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .stat {
+            font-size: clamp(3vh, 5vmin, 5vh);
+            font-weight: 700;
+            color: var(--warning);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* Reserved navigation area at bottom */
+        .nav-reserved-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-reserved-height);
+            background: linear-gradient(to top, rgba(13, 27, 42, 1) 0%, rgba(13, 27, 42, 0.95) 50%, transparent 100%);
+            border-top: 2px solid rgba(0, 229, 255, 0.2);
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: calc(var(--nav-reserved-height) / 2);
+            left: 50%;
+            transform: translate(-50%, 50%);
+            display: flex;
+            gap: clamp(10px, 1vw, 15px);
+            z-index: 1000;
+            background: rgba(13, 27, 42, 0.95);
+            padding: clamp(8px, 1vh, 12px) clamp(16px, 2vw, 24px);
+            border: 2px solid var(--accent);
+            box-shadow: 0 -2px 20px rgba(0, 229, 255, 0.3);
+            pointer-events: auto;
+        }
+
+        .btn {
+            background: rgba(0, 229, 255, 0.2);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 1vh 2vw;
+            font-size: clamp(1vh, 1.5vmin, 1.5vh);
+            font-family: 'IBM Plex Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            min-width: 10vw;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2vw;
+            margin-top: 2vh;
+        }
+
+        .emphasis {
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.1), transparent);
+            border-left: 4px solid var(--accent);
+            padding: 1.5vh 2vw;
+            margin: 1.5vh 0;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            :root {
+                --nav-reserved-height: 18vh;
+            }
+
+            .slide-content {
+                padding: 1.5vh 4vw;
+            }
+
+            .controls {
+                gap: 1vw;
+                padding: 1vh 2vw;
+            }
+
+            .btn {
+                font-size: clamp(0.9vh, 1.5vmin, 1.5vh);
+                padding: 0.8vh 1.5vw;
+                min-width: 15vw;
+            }
+
+            .slide::after {
+                right: 4vw;
+                font-size: clamp(0.9vh, 1.5vmin, 1.5vh);
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            :root {
+                --nav-reserved-height: 22vh;
+            }
+
+            .slide-content {
+                padding: 1.5vh 3vw;
+            }
+
+            .btn {
+                font-size: clamp(0.8vh, 1.2vmin, 1.2vh);
+                padding: 0.7vh 1.2vw;
+                min-width: 18vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slides-container">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Human Factors<br>for RPAS</h1>
+            <h3 class="subtitle">Why Pilots Make Mistakes & How to Prevent Them</h3>
+            <p class="meta">Based on TP15263 Section 3 & Transport Canada Standards<br>
+            CASARA Training - April 23, 2026 (60-90 min)</p>
+        </div>
+
+        <!-- Slide 2: Why This Matters -->
+        <div class="slide">
+            <h2>Why This Matters</h2>
+            <ul>
+                <li><span class="stat">75-80%</span> Pilot error = all aviation accidents<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">This isn't about bad pilots. It's about systems. Humans are predictable in certain ways.</span></li>
+                <li><strong>RPAs are no different</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Drone pilots face same cognitive limitations. You're looking at a screen, not out a windshield.</span></li>
+                <li><strong>Human factors training reduces risk</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Not by making you superhuman. By making you aware of your limits.</span></li>
+                <li><strong class="warning-text">Your brain is both your best tool and biggest liability</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Same brain that got you here can also kill you. Know which mode it's in.</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Learning Objectives -->
+        <div class="slide">
+            <h2>Learning Objectives (TP15263)</h2>
+            <p style="margin-bottom: 3vh;">By the end of this session, you will be able to:</p>
+            <ul>
+                <li>Describe visual scanning techniques for collision avoidance</li>
+                <li>Explain factors affecting pilot alertness & decision-making</li>
+                <li>Identify signs of fatigue, stress, and impairment</li>
+                <li>Apply the Swiss Cheese Model to accident analysis</li>
+                <li>Recognize automation complacency risks</li>
+            </ul>
+        </div>
+
+        <!-- Slide 4: The Visual System -->
+        <div class="slide">
+            <h2>The Visual System</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(22px, 2.2vw, 28px); margin-bottom: 2vh;"><strong>Vision is our PRIMARY sensory system for flight</strong></p>
+            </div>
+            <p style="margin: 3vh 0 2vh 0; font-size: clamp(20px, 2vw, 26px);">Key factors affecting visual performance:</p>
+            <ul>
+                <li><strong>Visual acuity</strong> (20/20 normal, contrast matters)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">A drone against grey sky is hard to see</span></li>
+                <li><strong>Accommodation & convergence</strong> (eye focus adjustments)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Eyes adjust from controller screen to sky (~1-2 seconds)</span></li>
+                <li><strong>Light/dark adaptation</strong> (takes longer dark→light)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Flying into shadow/cloud = compromised vision</span></li>
+                <li><strong class="warning-text">Empty space myopia</strong> (focuses at 1m in empty sky)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Solution: Actively focus at distance, use horizon/clouds as reference</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Visual Scanning Techniques -->
+        <div class="slide">
+            <h2>Visual Scanning Techniques</h2>
+            <p style="font-size: clamp(22px, 2.2vw, 28px); margin-bottom: 3vh;"><strong>Effective collision avoidance scanning:</strong></p>
+            <ul>
+                <li><strong>Series of regularly spaced eye movements</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Methodical beats frantic</span></li>
+                <li><strong>Focus for at least 1 second on each block area</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Minimum time for brain to register detail</span></li>
+                <li><strong>Systematic pattern: outer edge → aircraft → outer edge → aircraft → controller</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Fixed pattern prevents missing areas. Pilots with IFR training will be familiar with this - this is your RPAS T-scan.</span></li>
+                <li><strong>For VOs: scan in strips, pause at each fixation</strong></li>
+                <li><strong class="warning-text">⚠ Perspective illusion:</strong> Distant aircraft appear slower/smaller than reality<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">That Cessna 2 miles out? It's doing 120mph. Looks like it's crawling.</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Orientation & Disorientation -->
+        <div class="slide">
+            <h2>Orientation & Disorientation</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong class="danger-text">Visual illusions are a leading cause of accidents</strong></p>
+            </div>
+            <p style="margin: 3vh 0 2vh 0; font-size: clamp(20px, 2vw, 26px);">Common illusion scenarios:</p>
+            <ul>
+                <li><strong>Sloping terrain</strong> (looks different than it is)</li>
+                <li><strong>Lighting intensity changes</strong> (clouds, sun position)</li>
+                <li><strong>Lack of surface texture</strong> (water, snow, empty fields)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">No reference points = can't judge altitude or movement</span></li>
+                <li><strong>Approach path confusion</strong></li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong>Mitigation:</strong> Altitude caps, altitude minimums, GPS altitude, collision avoidance cameras<br>
+                <span style="color: var(--accent);">Your eyes lie. Instruments don't. Trust the numbers, verify with eyes.</span></p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Body Rhythms & Fatigue -->
+        <div class="slide">
+            <h2>Body Rhythms & Fatigue</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong>Circadian rhythm = 24-hour cycle</strong></p>
+            </div>
+            <ul style="margin-top: 3vh;">
+                <li>Controlled by light/dark, meals, activity<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Your body has a clock. Fighting it = fighting biology</span></li>
+                <li><span class="danger-text">Disruption = degraded performance</span><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Shift work, jet lag, all-nighters = same impairment as being drunk</span></li>
+            </ul>
+            <p style="margin: 3vh 0 1.5vh 0; font-size: clamp(20px, 2vw, 26px);"><strong>Jet lag effects:</strong></p>
+            <ul>
+                <li>Slowed reaction time <span class="stat" style="font-size: clamp(28px, 3vw, 36px);">24hr awake = 0.10% BAC</span></li>
+                <li>Decision-making impairment</li>
+                <li>Memory issues</li>
+                <li>Accepting lower performance standards</li>
+            </ul>
+        </div>
+
+        <!-- Slide 8: Sleep Deprivation -->
+        <div class="slide">
+            <h2>Sleep Deprivation</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong>Adults need 7-9 hours sleep</strong></p>
+                <p style="font-size: clamp(14px, 1.4vw, 20px); margin-top: 1vh;">Sleep is restorative and essential for mental performance</p>
+            </div>
+            <p style="margin: 3vh 0 1.5vh 0; font-size: clamp(20px, 2vw, 26px);"><strong>Rules (CAR 901.19):</strong></p>
+            <ul>
+                <li><span class="stat" style="font-size: clamp(28px, 3vw, 36px);">12 hours</span> - No flying within 12 hours of consuming alcohol</li>
+                <li>No flying while fatigued</li>
+                <li>No flying while impaired by medications</li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong class="warning-text">Warning signs:</strong><br>
+                Microsleeps (brief blackout) • Slowed reactions (delayed inputs) • Poor judgment (thinking you're fine)</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Medications & Substances -->
+        <div class="slide">
+            <h2>Medications & Substances</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong class="danger-text">ANY medication can impair performance</strong></p>
+            </div>
+            <ul style="margin-top: 3vh;">
+                <li><strong>Over-the-counter:</strong> antihistamines, analgesics<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">First-gen antihistamines (Benadryl) = strong sedation</span></li>
+                <li><strong>Prescription:</strong> check with medical examiner</li>
+                <li>Even "safe" drugs can have residual effects<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Half-life matters. Took at 10pm? Still in you at 6am</span></li>
+                <li><strong class="warning-text">The 5x Half-Life Rule:</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Look up medication's half-life → multiply by 5 = wait time</span></li>
+                <li>Example: 8hr half-life × 5 = 40 hours</li>
+                <li>Long-term use = builds up, may need longer</li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px); color: var(--warning);"><strong>⚠ Never self-medicate before flying</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Alcohol -->
+        <div class="slide">
+            <h2>Alcohol</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong class="danger-text">Depressant of the nervous system</strong></p>
+            </div>
+            <ul style="margin-top: 3vh;">
+                <li><strong>Slows everything:</strong> reflexes, judgment, vision<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Depressant of nervous system affects all cognitive functions</span></li>
+                <li><strong>Disrupts sleep patterns</strong> (hangover effect)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Sleep drunk is still drunk</span></li>
+                <li><strong class="stat" style="font-size: clamp(28px, 3vw, 36px);">12 hours</strong> - rule is MINIMUM<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Some need 24. Know your body</span></li>
+                <li><strong>Removed at fixed rate</strong> - can't be sped up<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Strong coffee doesn't help. Time is the only cure</span></li>
+            </ul>
+            <div class="hud-box" style="margin-top: 4vh;">
+                <p style="font-size: clamp(18px, 1.8vw, 24px);"><strong class="warning-text">A hangover is an effect of consuming alcohol</strong><br>
+                <span style="color: var(--light); font-size: clamp(16px, 1.6vw, 22px);">If you have to ask if it's been long enough, it hasn't</span></p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Aviation Psychology -->
+        <div class="slide">
+            <h2>Aviation Psychology</h2>
+            <p style="font-size: clamp(20px, 2vw, 26px); margin-bottom: 2.5vh;"><strong>Factors affecting decision-making:</strong></p>
+            <ul>
+                <li><strong>Stress</strong> (acute vs chronic)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Acute = "there's a plane" (focuses). Chronic = "bills, life" (distracts)</span></li>
+                <li><strong>Workload management</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Too much = overwhelmed. Too little = bored. Both dangerous</span></li>
+                <li><strong>Situational awareness</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Knowing what's around you, where you are, what's coming</span></li>
+                <li><strong>Attitude</strong> (overconfidence, complacency)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">"I've done this 100 times" = dangerous phrase</span></li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(18px, 1.8vw, 24px);"><strong class="danger-text">The dangerous triad:</strong><br>
+                Fatigue + Stress + Complacency<br>
+                <span style="color: var(--warning);">All three together = accident waiting to happen</span></p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Situational Awareness -->
+        <div class="slide">
+            <h2>Situational Awareness</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(22px, 2.2vw, 28px);"><strong>The ability to perceive, comprehend, and project</strong></p>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <ul>
+                        <li><strong>Perceive</strong><br>What's around me right now?</li>
+                        <li><strong>Comprehend</strong><br>What does it mean?</li>
+                        <li><strong>Project</strong><br>What's going to happen next?</li>
+                    </ul>
+                </div>
+                <div>
+                    <p style="font-size: clamp(18px, 1.8vw, 24px); margin-bottom: 2vh;"><strong class="danger-text">Lost when:</strong></p>
+                    <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                        <li>High workload</li>
+                        <li>Distractions</li>
+                        <li>Information overload</li>
+                        <li>Fatigue</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong>Maintain SA through:</strong><br>
+                Systematic scanning • Verbal callouts • Crew communication • Cross-checking instruments</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Automation Complacency -->
+        <div class="slide">
+            <h2>Automation Complacency</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(20px, 2vw, 26px);"><strong class="danger-text">"The automation did it" is a dangerous mindset</strong></p>
+                <p style="font-size: clamp(16px, 1.6vw, 22px); margin-top: 1vh;">You're still the pilot. The machine is a tool, not a replacement</p>
+            </div>
+            <p style="margin: 3vh 0 2vh 0; font-size: clamp(20px, 2vw, 26px);"><strong>Risks:</strong></p>
+            <ul>
+                <li>Skills atrophy (lost manual flying ability)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">If automation fails, can you fly manually?</span></li>
+                <li>Reduced vigilance ("It's watching, so I don't have to")</li>
+                <li>Mode confusion (What mode is it in? What will it do next?)</li>
+                <li>Automation surprises ("Why did it do THAT?")</li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong>Mitigation:</strong><br>
+                Know your automation intimately • Stay engaged • Practice manual flying regularly</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: The Swiss Cheese Model -->
+        <div class="slide">
+            <h2>The Swiss Cheese Model</h2>
+            <p style="font-size: clamp(18px, 1.8vw, 24px); margin-bottom: 3vh;"><strong>James Reason's accident causation model</strong></p>
+            <p style="font-size: clamp(20px, 2vw, 26px); margin-bottom: 2vh;">Four layers of defense (each layer should stop the accident):</p>
+            <ul>
+                <li><strong class="stat" style="font-size: clamp(24px, 2.5vw, 32px);">1.</strong> <strong>Organizational</strong> - Policies, culture, resources<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">HQ decisions, training programs, funding</span></li>
+                <li><strong class="stat" style="font-size: clamp(24px, 2.5vw, 32px);">2.</strong> <strong>Supervision</strong> - Training, mentoring, oversight<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Did someone check your work?</span></li>
+                <li><strong class="stat" style="font-size: clamp(24px, 2.5vw, 32px);">3.</strong> <strong>Preconditions</strong> - Fatigue, equipment, crew state<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">What's your condition?</span></li>
+                <li><strong class="stat" style="font-size: clamp(24px, 2.5vw, 32px);">4.</strong> <strong>Unsafe Acts</strong> - Errors, violations, mistakes<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">The actual mistake</span></li>
+            </ul>
+            <div class="emphasis" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong class="warning-text">Accident = holes align across all layers</strong><br>
+                One hole = blocked. Four holes in a line = accident.</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: Swiss Cheese Visualization -->
+        <div class="slide">
+            <h2>Swiss Cheese Model</h2>
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 3vh;">
+                <img src="images/swiss cheese model.jpeg" alt="Swiss Cheese Model - four layers with aligned holes showing accident trajectory" style="max-width: 85%; max-height: 60vh; object-fit: contain; border: 2px solid var(--accent); box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);">
+                <p style="font-size: clamp(18px, 2vw, 24px); text-align: center; color: var(--light);">
+                    <strong class="warning-text">When holes align across all layers</strong> → accident penetrates all defenses
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 16: HFACS Framework -->
+        <div class="slide">
+            <h2>HFACS Framework</h2>
+            <p style="font-size: clamp(18px, 1.8vw, 24px); margin-bottom: 3vh;"><strong>Human Factors Analysis & Classification System</strong></p>
+            <p style="font-size: clamp(16px, 1.6vw, 22px); margin-bottom: 2vh;">Expands Swiss Cheese into:</p>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li><strong>Organizational Influences</strong><br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Management, policies, culture, resource allocation</span></li>
+                <li><strong>Unsafe Supervision</strong><br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Inadequate supervision, planned inappropriate operations</span></li>
+                <li><strong>Preconditions for Unsafe Acts</strong><br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Personal factors (fatigue, stress), environmental factors</span></li>
+                <li><strong>Unsafe Acts (errors/violations)</strong><br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Skill-based errors, decision errors, routine violations</span></li>
+            </ul>
+            <div class="emphasis" style="margin-top: 4vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);">Used by TSB, FAA, Transport Canada<br>
+                <span style="color: var(--accent);">This is the professional standard</span></p>
+            </div>
+        </div>
+
+        <!-- Slide 17: Case Study - TSB A21O0069 -->
+        <div class="slide">
+            <h2>Case Study - TSB A21O0069</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(22px, 2.2vw, 28px);"><strong class="danger-text">The Buttonville Collision</strong></p>
+                <p style="font-size: clamp(14px, 1.4vw, 20px); margin-top: 1vh;">Real accident. Real report. Real lessons.</p>
+            </div>
+            <p style="font-size: clamp(18px, 1.8vw, 24px); margin: 3vh 0 2vh 0;"><strong>August 10, 2021</strong></p>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li>York Regional Police DJI Matrice M210<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Professional unit, not hobbyists</span></li>
+                <li>Cessna 172 on final to CYKZ<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Landing traffic</span></li>
+                <li>RPA hovering at 400ft AGL<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Below cloud, in approach path</span></li>
+                <li><strong class="danger-text">COLLISION</strong> - no injuries<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Lucky. Could have been fatalities</span></li>
+            </ul>
+            <div class="hud-box" style="margin-top: 3vh;">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong class="warning-text">Why this matters:</strong> Same situation could happen in SAR.<br>
+                You vs manned aircraft. Who wins? Nobody.</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: Case Analysis - What Happened? -->
+        <div class="slide">
+            <h2>Case Analysis - What Happened?</h2>
+            <p style="font-size: clamp(20px, 2vw, 26px); margin-bottom: 2.5vh;"><strong>Timeline:</strong></p>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li><strong>1256:</strong> RPA begins 2nd flight, hovers at 400ft<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">"Just a hover" = dangerous assumption</span></li>
+                <li><strong>1257:</strong> Cessna joins right downwind Runway 15<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Aircraft joining = traffic pattern</span></li>
+                <li><strong>1301:</strong> Collision at 1.2NM from threshold<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">5 minutes later. Lots of time to see it</span></li>
+            </ul>
+            <p style="font-size: clamp(20px, 2vw, 26px); margin: 4vh 0 2vh 0;"><strong class="danger-text">The pilot was:</strong></p>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li>Watching video feed (not airspace)<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">GCS screen = his back to the sky</span></li>
+                <li>Had ADS-B receiver but Cessna had no ADS-B<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Technology failed. Doesn't replace looking</span></li>
+                <li>No dedicated spotter assigned<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Second set of eyes could have seen it</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 19: Apply Swiss Cheese - Layer by Layer -->
+        <div class="slide">
+            <h2>Apply Swiss Cheese</h2>
+            <div style="font-size: clamp(14px, 1.4vw, 20px);">
+                <div class="hud-box" style="margin-bottom: 1.5vh;">
+                    <p><strong class="stat" style="font-size: clamp(18px, 1.8vw, 24px);">1. ORGANIZATIONAL:</strong></p>
+                    <p>• Police unit requested recon under approach path<br>
+                    • No policy against hover location</p>
+                </div>
+                <div class="hud-box" style="margin-bottom: 1.5vh;">
+                    <p><strong class="stat" style="font-size: clamp(18px, 1.8vw, 24px);">2. SUPERVISION:</strong></p>
+                    <p>• No dedicated spotter<br>
+                    • Officer commanding stood nearby watching video</p>
+                </div>
+                <div class="hud-box" style="margin-bottom: 1.5vh;">
+                    <p><strong class="stat" style="font-size: clamp(18px, 1.8vw, 24px);">3. PRECONDITIONS:</strong></p>
+                    <p>• RPA pilot watching screen, not airspace<br>
+                    • Cessna no ADS-B (invisible to RPA)<br>
+                    • TV display lacked telemetry</p>
+                </div>
+                <div class="hud-box">
+                    <p><strong class="stat" style="font-size: clamp(18px, 1.8vw, 24px);">4. UNSAFE ACTS:</strong></p>
+                    <p>• Hovering in active approach path<br>
+                    • Cessna see-and-avoid failed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Discussion -->
+        <div class="slide">
+            <h2>Discussion</h2>
+            <p style="font-size: clamp(22px, 2.2vw, 28px); margin-bottom: 3.5vh;"><strong>Questions for the class:</strong></p>
+            <ul style="font-size: clamp(18px, 1.8vw, 24px);">
+                <li>Which layer had the most critical failure?</li>
+                <li>What could have prevented this?</li>
+                <li>How does this apply to CASARA operations?</li>
+            </ul>
+            <div class="emphasis" style="margin-top: 6vh;">
+                <p style="font-size: clamp(20px, 2vw, 26px); margin-bottom: 2vh;"><strong class="warning-text">Think about your own operations:</strong></p>
+                <p style="font-size: clamp(18px, 1.8vw, 24px);">• Where are the holes in your cheese?</p>
+                <p style="font-size: clamp(18px, 1.8vw, 24px);">• What's your "video feed" distraction?</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: The 12 Core Human Factors -->
+        <div class="slide">
+            <h2>The 12 Core Human Factors</h2>
+            <div class="grid-2" style="font-size: clamp(14px, 1.4vw, 20px);">
+                <div>
+                    <ul>
+                        <li><strong>1. Fatigue</strong> - The killer. Most under-reported</li>
+                        <li><strong>2. Stress</strong> - "Hurry up" kills</li>
+                        <li><strong>3. Complacency</strong> - "It'll be fine"</li>
+                        <li><strong>4. Lack of Knowledge</strong> - Don't know what you don't know</li>
+                        <li><strong>5. Distraction</strong> - Focused on one thing, miss everything else</li>
+                        <li><strong>6. Situational Awareness</strong> - Lost SA = lost control</li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li><strong>7. Communication</strong> - "I thought you said..."</li>
+                        <li><strong>8. Pressure</strong> - Mission completion > safety = wrong</li>
+                        <li><strong>9. Norms</strong> - "It's always been fine before"</li>
+                        <li><strong>10. Lack of Resources</strong> - Doing more with less = accident</li>
+                        <li><strong>11. Attitude</strong> - "It won't happen to me"</li>
+                        <li><strong>12. Fitness</strong> - Can you actually do this today?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Exercise - Scenario Analysis -->
+        <div class="slide">
+            <h2>Exercise - Scenario Analysis</h2>
+            <div class="emphasis">
+                <p style="font-size: clamp(16px, 1.6vw, 22px);"><strong>Scenario:</strong> You're tasked with a search pattern near an airport. The operation commander keeps changing the search area. You're on your 3rd battery, tired, and haven't eaten. The weather is deteriorating.</p>
+            </div>
+            <p style="font-size: clamp(20px, 2vw, 26px); margin: 40px 0 25px 0;"><strong>Apply Swiss Cheese - identify failures in each layer:</strong></p>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li><strong>Organizational:</strong> No clear search area, changing demands</li>
+                <li><strong>Supervision:</strong> No one saying "stop, we're done"</li>
+                <li><strong>Preconditions:</strong> Fatigue (3rd battery), hunger, weather</li>
+                <li><strong>Unsafe Acts:</strong> Continuing when you should have landed</li>
+            </ul>
+        </div>
+
+        <!-- Slide 23: Key Takeaways -->
+        <div class="slide">
+            <h2>Key Takeaways</h2>
+            <ul style="font-size: clamp(16px, 1.6vw, 22px);">
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">1.</strong> Pilot error is #1 cause - understand why<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">It's not about bad pilots. It's about systems</span></li>
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">2.</strong> Fatigue kills - know your limits<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">If you have to ask, you shouldn't fly</span></li>
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">3.</strong> Automation is a tool - do not trust blindly<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Can fail. Can be misunderstood. You're still pilot</span></li>
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">4.</strong> SOPs exist - they are written in blood<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Someone died so that rule exists</span></li>
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">5.</strong> Swiss Cheese works - use it for analysis<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Not just for accidents - use for pre-flight "what could go wrong"</span></li>
+                <li><strong class="stat" style="font-size: clamp(22px, 2.2vw, 28px);">6.</strong> You are the last line of defense<br>
+                    <span style="font-size: clamp(14px, 1.5vw, 18px); color: var(--gray);">Everyone else can fail. You're there at the end</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 24: Resources -->
+        <div class="slide">
+            <h2>Resources</h2>
+            <ul style="font-size: clamp(18px, 1.8vw, 24px);">
+                <li><strong>TP15263 Section 3</strong> - Human Factors (Transport Canada)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Your syllabus</span></li>
+                <li><strong>CAR 901.19</strong> - Personnel Licensing & Operations<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">The rules</span></li>
+                <li><strong>TSB A21O0069</strong> - Buttonville Collision Report<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Read it. It's public.</span></li>
+                <li><strong>CASARA Spotters Guide</strong><br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">Your visual scanning reference</span></li>
+                <li><strong>HFACS Framework</strong> (Scott Shappell)<br>
+                    <span style="font-size: clamp(14px, 1.4vw, 20px); color: var(--gray);">The academic stuff behind Swiss Cheese</span></li>
+            </ul>
+        </div>
+
+        <!-- Slide 25: Questions? -->
+        <div class="slide title-slide">
+            <h1 style="font-size: clamp(5vh, 7vw, 10vh);">Questions?</h1>
+            <ul style="font-size: clamp(22px, 2.2vw, 28px); margin-top: 4vh;">
+                <li>Discussion</li>
+                <li>Scenarios</li>
+                <li>Real-world applications</li>
+            </ul>
+            <div class="emphasis" style="margin-top: 8vh;">
+                <p style="font-size: clamp(18px, 1.8vw, 24px); color: var(--accent);"><strong>Stay safe. Fly smart.</strong></p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Reserved navigation area - nothing can scroll into this space -->
+    <div class="nav-reserved-area"></div>
+
+    <div class="controls">
+        <button class="btn" onclick="prevSlide()">◀ PREV</button>
+        <button class="btn" onclick="nextSlide()">NEXT ▶</button>
+        <button class="btn" onclick="resetSlides()">RESET</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+
+            // Reset all revealed items on the new slide
+            slides[currentSlide].querySelectorAll('li.revealed').forEach(item => {
+                item.classList.remove('revealed');
+                item.classList.add('clickable');
+            });
+
+            applyScale(slides[currentSlide]);
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+        function resetSlides() { showSlide(0); }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            else if (e.key === 'ArrowLeft') prevSlide();
+            else if (e.key === 'Home') resetSlides();
+        });
+
+        // Wrap all slide children in .slide-content divs
+        function wrapSlideContent() {
+            slides.forEach(slide => {
+                if (slide.querySelector('.slide-content')) return;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'slide-content';
+                while (slide.firstChild) wrapper.appendChild(slide.firstChild);
+                slide.appendChild(wrapper);
+            });
+        }
+
+        // STEP 2: Apply click-to-reveal
+        function initializeClickableItems() {
+            document.querySelectorAll('.slide ul li').forEach(item => {
+                if (item.querySelector('.li-content')) return;
+                const content = item.innerHTML;
+                item.innerHTML = `<span class="li-content">${content}</span>`;
+                item.classList.add('clickable');
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!this.classList.contains('revealed')) {
+                        this.classList.remove('clickable');
+                        this.classList.add('revealed');
+                    }
+                });
+            });
+        }
+
+        // STEP 3: Binary search — find largest scale where content doesn't touch the lava
+        // Uses an off-screen clone so the real slide is never visually disturbed
+        function applyScale(slide) {
+            const content = slide.querySelector('.slide-content');
+            if (!content) return;
+
+            const navPct = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-reserved-height'));
+            const lavaLine = window.innerHeight * (1 - navPct / 100);
+            const isTitle = slide.classList.contains('title-slide');
+
+            // Clone the entire slide off-screen for measurement
+            const clone = slide.cloneNode(true);
+            clone.style.cssText = 'position:fixed;top:0;left:-9999px;width:100vw;height:100vh;display:block;opacity:0;pointer-events:none;';
+            // Force all li-content visible in clone
+            clone.querySelectorAll('.li-content').forEach(el => {
+                el.style.cssText = 'opacity:1!important;max-height:none!important;transition:none!important;';
+            });
+            document.body.appendChild(clone);
+
+            const cloneContent = clone.querySelector('.slide-content');
+            cloneContent.style.marginTop = '0';
+
+            // Binary search on the clone
+            let lo = 0.1, hi = 5.0;
+            for (let i = 0; i < 25; i++) {
+                const mid = (lo + hi) / 2;
+                cloneContent.style.transform = `scale(${mid})`;
+                cloneContent.style.width = `${100 / mid}%`;
+                void cloneContent.offsetHeight;
+
+                const bottom = cloneContent.getBoundingClientRect().bottom;
+                if (bottom > lavaLine) {
+                    hi = mid;
+                } else {
+                    lo = mid;
+                }
+            }
+
+            // Remove clone
+            document.body.removeChild(clone);
+
+            // Apply result to real slide
+            const finalScale = lo;
+            content.style.marginTop = '0';
+            content.style.transform = `scale(${finalScale})`;
+            content.style.width = `${100 / finalScale}%`;
+
+            // Vertically center title slides
+            if (isTitle) {
+                void content.offsetHeight;
+                const gap = lavaLine - content.getBoundingClientRect().bottom;
+                if (gap > 0) content.style.marginTop = `${gap / 2}px`;
+            }
+
+            console.log(`Slide ${Array.from(slides).indexOf(slide)+1}: scale=${finalScale.toFixed(3)}, lava=${lavaLine.toFixed(0)}`);
+        }
+
+        function init() {
+            wrapSlideContent();
+            initializeClickableItems();
+            applyScale(slides[currentSlide]);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        // Rescale on window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => applyScale(slides[currentSlide]), 150);
+        });
+    </script>
+</body>
+</html>

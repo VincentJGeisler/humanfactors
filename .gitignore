@@ -1,0 +1,7 @@
+.DS_Store
+*.pyc
+__pycache__/
+create_presentation.py
+presentation_backup.html
+reference materials/
+*.docx
